@@ -1,0 +1,10 @@
+/* File: styles.css */
+
+/* Style for the canvas element */
+canvas {
+    display: block;
+    margin: 0 auto;
+    background: #1e90ff; /* Ocean blue background */
+    width: 100vw;
+    height: 100vh;
+}
