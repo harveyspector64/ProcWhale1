@@ -73,25 +73,32 @@ function applyConstraints() {
         let angle2 = Math.atan2(dy2, dx2);
 
         let angleDiff = angle2 - angle1;
-        if (Math.abs(angleDiff) > Math.PI / 4) { // Example maximum angle constraint
-            let adjustment = (angleDiff > 0 ? 1 : -1) * (Math.abs(angleDiff) - Math.PI / 4);
+        if (Math.abs(angleDiff) > Math.PI / 6) { // Stricter maximum angle constraint
+            let adjustment = (angleDiff > 0 ? 1 : -1) * (Math.abs(angleDiff) - Math.PI / 6);
             curr.x += Math.cos(angle1 + adjustment) * whale.segmentLength;
             curr.y += Math.sin(angle1 + adjustment) * whale.segmentLength;
         }
     }
 }
 
+// Smooth the position updates to avoid erratic behavior
+function smoothMovement() {
+    for (let i = 0; i < whale.points.length; i++) {
+        whale.points[i].x = whale.points[i].x * 0.9 + whale.baseX * 0.1;
+        whale.points[i].y = whale.points[i].y * 0.9 + whale.baseY * 0.1;
+    }
+}
+
 // Update whale points based on undulating motion and apply constraints
 function updateWhale() {
-    for (let i = 0; i < whale.points.length; i++) {
-        let point = whale.points[i];
-        if (whale.moving) {
+    if (whale.moving) {
+        for (let i = 0; i < whale.points.length; i++) {
+            let point = whale.points[i];
             point.x += whale.direction.x;
             point.y += whale.direction.y + Math.sin(Date.now() * whale.frequency + i) * whale.amplitude;
-        } else {
-            point.x += whale.direction.x * 0.9; // Damping effect when stopping
-            point.y += whale.direction.y * 0.9;
         }
+    } else {
+        smoothMovement();
     }
     applyConstraints();
     debug('Whale updated');
