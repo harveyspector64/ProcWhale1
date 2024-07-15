@@ -38,14 +38,25 @@ function initializeWhale() {
     debug('Whale initialized');
 }
 
-// Update whale points based on undulating motion and apply constraints
-function updateWhale() {
-    for (let i = 0; i < whale.points.length; i++) {
-        let point = whale.points[i];
-        point.y = whale.baseY + i * whale.segmentLength + Math.sin(Date.now() * whale.frequency + i) * whale.amplitude;
+// Apply constraints to ensure natural movement
+function applyConstraints() {
+    // Apply distance constraints
+    for (let constraint of whale.constraints) {
+        let pointA = whale.points[constraint.a];
+        let pointB = whale.points[constraint.b];
+        let dx = pointB.x - pointA.x;
+        let dy = pointB.y - pointA.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let difference = (distance - constraint.length) / distance;
+        let offsetX = dx * difference * 0.5;
+        let offsetY = dy * difference * 0.5;
+        pointA.x += offsetX;
+        pointA.y += offsetY;
+        pointB.x -= offsetX;
+        pointB.y -= offsetY;
     }
 
-    // Apply angle constraints
+    // Apply angle constraints (keeping it simple for now)
     for (let i = 1; i < whale.points.length - 1; i++) {
         let prev = whale.points[i - 1];
         let curr = whale.points[i];
@@ -66,7 +77,15 @@ function updateWhale() {
             curr.y += Math.sin(angle1 + adjustment) * whale.segmentLength;
         }
     }
+}
 
+// Update whale points based on undulating motion and apply constraints
+function updateWhale() {
+    for (let i = 0; i < whale.points.length; i++) {
+        let point = whale.points[i];
+        point.y = whale.baseY + i * whale.segmentLength + Math.sin(Date.now() * whale.frequency + i) * whale.amplitude;
+    }
+    applyConstraints();
     debug('Whale updated');
 }
 
