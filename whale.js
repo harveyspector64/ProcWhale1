@@ -21,8 +21,8 @@ let whale = {
     segmentLength: 20, // Length of each segment
     baseX: canvas.width / 2, // Base X position of the whale
     baseY: canvas.height / 2, // Base Y position of the whale
-    amplitude: 30, // Amplitude of the undulation
-    frequency: 0.02, // Frequency of the undulation
+    amplitude: 10, // Amplitude of the undulation
+    frequency: 0.001, // Frequency of the undulation
     bodyWidths: [] // Array to hold the width of each body segment
 };
 
