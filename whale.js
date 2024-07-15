@@ -58,7 +58,7 @@ function applyConstraints() {
         pointB.y -= offsetY;
     }
 
-    // Apply angle constraints (keeping it simple for now)
+    // Apply angle constraints to maintain whale shape
     for (let i = 1; i < whale.points.length - 1; i++) {
         let prev = whale.points[i - 1];
         let curr = whale.points[i];
