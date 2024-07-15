@@ -23,7 +23,9 @@ let whale = {
     baseY: canvas.height / 2, // Base Y position of the whale
     amplitude: 10, // Amplitude of the undulation
     frequency: 0.001, // Frequency of the undulation
-    bodyWidths: [] // Array to hold the width of each body segment
+    bodyWidths: [], // Array to hold the width of each body segment
+    moving: false, // Flag to check if the whale is moving
+    direction: { x: 0, y: 0 } // Direction of movement
 };
 
 // Initialize whale points and constraints
@@ -83,7 +85,13 @@ function applyConstraints() {
 function updateWhale() {
     for (let i = 0; i < whale.points.length; i++) {
         let point = whale.points[i];
-        point.y = whale.baseY + i * whale.segmentLength + Math.sin(Date.now() * whale.frequency + i) * whale.amplitude;
+        if (whale.moving) {
+            point.x += whale.direction.x;
+            point.y += whale.direction.y + Math.sin(Date.now() * whale.frequency + i) * whale.amplitude;
+        } else {
+            point.x += whale.direction.x * 0.9; // Damping effect when stopping
+            point.y += whale.direction.y * 0.9;
+        }
     }
     applyConstraints();
     debug('Whale updated');
